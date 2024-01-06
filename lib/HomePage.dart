@@ -112,20 +112,20 @@ class _HomePageState extends State<HomePage> {
 
   AppBar _buildAppbar() {
     return AppBar(
-      title: Text("App"),
+      title: Text('Moye Moye'),
       actions: [
         _buildAppbarItem(
           InkWell(
             borderRadius: BorderRadius.circular(20),
             onTap: () async {
-              themer.setMode(switch (await themer.getMode()) {
+              themer.setMode(switch (await themer.getThemeMode()) {
                 ThemeMode.system => ThemeMode.light,
                 ThemeMode.light => ThemeMode.dark,
                 _ => ThemeMode.system,
               });
             },
             onLongPress: () async {
-              final Color initialColor = await themer.getColor();
+              final Color initialColor = await themer.getThemeColor();
               var newColor = await showColorPickerDialog(
                 context,
                 initialColor,
@@ -199,8 +199,10 @@ class _HomePageState extends State<HomePage> {
                 ),
               ),
               Expanded(
-                  child: Container(
-                      child: _buildTodoViewer(searchController.text))),
+                child: Container(
+                  child: _buildTodoViewer(searchController.text),
+                ),
+              ),
             ],
           ),
         ),

@@ -17,12 +17,12 @@ class TodoListProvider extends ChangeNotifier {
 
 class ThemeProvider extends ChangeNotifier {
   ThemeProvider() {
-    getColor();
-    getMode();
+    getThemeColor();
+    getThemeMode();
   }
 
   ThemeMode? _themeMode;
-  Future<ThemeMode> getMode() async {
+  Future<ThemeMode> getThemeMode() async {
     var storedpref = (await sharedPrefs).getString('theme-mode');
     if (storedpref != null) {
       _themeMode = ThemeMode.values.firstWhere(
@@ -43,23 +43,24 @@ class ThemeProvider extends ChangeNotifier {
     notifyListeners();
   }
 
-  Color? _color;
-  Future<Color> getColor() async {
+  Color? _themeColor;
+  Future<Color> getThemeColor() async {
     var storedpref = (await sharedPrefs).getInt('app-color');
     if (storedpref != null) {
-      _color = Color(storedpref);
+      _themeColor = Color(storedpref);
       notifyListeners();
     }
-    return _color ?? Colors.black;
+    return _themeColor ?? Colors.black;
   }
 
   Color getColorSync() {
-    return _color ?? Colors.black;
+    return _themeColor ?? Colors.black;
   }
 
   Future<void> setColor(Color color) async {
-    _color = color;
-    await (await sharedPrefs).setInt('app-color', _color?.value ?? 0xFF000000);
+    _themeColor = color;
+    await (await sharedPrefs)
+        .setInt('app-color', _themeColor?.value ?? 0xFF000000);
     notifyListeners();
   }
 }

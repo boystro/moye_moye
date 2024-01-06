@@ -18,6 +18,7 @@ class _AppState extends State<App> {
   @override
   Widget build(BuildContext context) {
     return MaterialApp(
+      title: 'Moye Moye',
       themeMode: _themeMode,
       theme: ThemeData(
         colorSchemeSeed: _colorSchemeSeed,
