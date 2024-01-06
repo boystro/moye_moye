@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
-import 'package:moye_moye/main.dart';
-import 'package:moye_moye/todo.dart';
 import 'package:provider/provider.dart';
+import 'providers.dart';
+import 'todo.dart';
 
 class PageNewTodo extends StatefulWidget {
   const PageNewTodo({super.key});

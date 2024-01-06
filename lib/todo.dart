@@ -1,4 +1,4 @@
-import 'package:moye_moye/storage.dart';
+import 'storage.dart';
 
 class Todo {
   final int id;
