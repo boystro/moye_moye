@@ -35,8 +35,11 @@ class Todo {
   }
 
   static Future<int> update(Todo data) async {
-    return await (await db)
-        .update(tableName, data.toDbMap(), where: "id = ${data.id}");
+    return await (await db).update(
+      tableName,
+      data.toDbMap(),
+      where: "id = ${data.id}",
+    );
   }
 
   /// Converts current [Todo] to [Map]
@@ -59,6 +62,9 @@ class Todo {
 
   /// Saves Current [Todo] to db.
   Future<int> saveToDb() async {
+    if (id > 0) {
+      return await update(this);
+    }
     return await (await db).insert(tableName, this.toDbMap());
   }
 

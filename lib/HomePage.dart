@@ -3,7 +3,7 @@ import 'package:provider/provider.dart';
 import 'package:flex_color_picker/flex_color_picker.dart';
 import 'providers.dart';
 import 'todo.dart';
-import 'PageNewTodo.dart';
+import 'PageTodoEditor.dart';
 
 class HomePage extends StatefulWidget {
   const HomePage({super.key});
@@ -50,7 +50,10 @@ class _HomePageState extends State<HomePage> {
         clipBehavior: Clip.antiAlias,
         elevation: 1,
         child: InkWell(
-          onTap: () => null,
+          onTap: () => Navigator.push(
+            context,
+            MaterialPageRoute(builder: (context) => PageTodoEditor(todo: todo)),
+          ),
           child: Padding(
             padding: const EdgeInsets.symmetric(
               horizontal: 16.0,
@@ -80,12 +83,19 @@ class _HomePageState extends State<HomePage> {
                       ),
                     ),
                     IconButton(
-                      onPressed: () {
-                        todo.delete().then(
-                              (value) => context
-                                  .read<TodoListProvider>()
-                                  .refreshList(),
-                            );
+                      onPressed: () async {
+                        await todo.delete();
+                        context.read<TodoListProvider>().refreshList();
+                        SnackBar(
+                          content: Center(
+                            child: Text(
+                              "Todo Removed",
+                              style: TextStyle(fontWeight: FontWeight.bold),
+                            ),
+                          ),
+                          behavior: SnackBarBehavior.floating,
+                          shape: StadiumBorder(),
+                        );
                       },
                       icon: Icon(Icons.delete),
                       iconSize: 20.0,
@@ -194,7 +204,7 @@ class _HomePageState extends State<HomePage> {
                   ),
                   onPressed: () => Navigator.push(
                     context,
-                    MaterialPageRoute(builder: (context) => PageNewTodo()),
+                    MaterialPageRoute(builder: (context) => PageTodoEditor()),
                   ),
                 ),
               ),

@@ -3,26 +3,38 @@ import 'package:provider/provider.dart';
 import 'providers.dart';
 import 'todo.dart';
 
-class PageNewTodo extends StatefulWidget {
-  const PageNewTodo({super.key});
+class PageTodoEditor extends StatefulWidget {
+  const PageTodoEditor({super.key, this.todo});
+
+  final Todo? todo;
 
   @override
-  State<PageNewTodo> createState() => _PageNewTodoState();
+  State<PageTodoEditor> createState() => _PageTodoEditorState();
 }
 
-class _PageNewTodoState extends State<PageNewTodo> {
-  bool _isDone = false;
+class _PageTodoEditorState extends State<PageTodoEditor> {
+  var _isDone = false;
+  var _title = '';
+  var _body = '';
 
   var _titleController = TextEditingController();
   var _bodyController = TextEditingController();
 
+  @override
+  void initState() {
+    super.initState();
+    _title = _titleController.text = widget.todo?.title ?? '';
+    _body = _bodyController.text = widget.todo?.body ?? '';
+    _isDone = widget.todo?.isDone ?? false;
+  }
+
   void save() {
     var todo = Todo(
-      title: _titleController.text,
-      body: _bodyController.text,
+      title: _title,
+      body: _body,
       isDone: _isDone,
+      id: widget.todo?.id ?? -1,
     );
-    print(todo.toDbMap());
     todo.saveToDb();
     Navigator.pop(context);
     context.read<TodoListProvider>().refreshList();
@@ -30,7 +42,7 @@ class _PageNewTodoState extends State<PageNewTodo> {
       SnackBar(
         content: Center(
           child: Text(
-            "Todo Created",
+            todo.id > 0 ? "Todo Updated" : "Todo Created",
             style: TextStyle(fontWeight: FontWeight.bold),
           ),
         ),
@@ -44,7 +56,7 @@ class _PageNewTodoState extends State<PageNewTodo> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: Text("New Todo"),
+        title: Text(widget.todo == null ? "New Todo" : "Edit Todo"),
       ),
       body: Column(
         children: [
@@ -68,7 +80,7 @@ class _PageNewTodoState extends State<PageNewTodo> {
                               : Colors.black54,
                         ),
                   ),
-                  onChanged: (value) => _titleController.text = value,
+                  onChanged: (value) => _title = value,
                 ),
                 TextField(
                   controller: _bodyController,
@@ -80,7 +92,7 @@ class _PageNewTodoState extends State<PageNewTodo> {
                             ? Colors.white60
                             : Colors.black54,
                       )),
-                  onChanged: (value) => _bodyController.text = value,
+                  onChanged: (value) => _body = value,
                   maxLines: null,
                 )
               ],
@@ -104,7 +116,7 @@ class _PageNewTodoState extends State<PageNewTodo> {
                 Expanded(child: Text("Completed")),
                 ElevatedButton(
                   onPressed: save,
-                  child: Text("Create"),
+                  child: Text(widget.todo == null ? "Create" : "Save"),
                 ),
               ],
             ),
