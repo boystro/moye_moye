@@ -15,7 +15,7 @@ class HomePage extends StatefulWidget {
 class _HomePageState extends State<HomePage> {
   ThemeProvider get themer => context.read<ThemeProvider>();
   Iterable<Todo> get todos => context.watch<TodoListProvider>().todos;
-  var searchController = TextEditingController();
+  String _search = '';
 
   Widget _buildAppbarItem(Widget widget) {
     return Padding(
@@ -86,7 +86,7 @@ class _HomePageState extends State<HomePage> {
                       onPressed: () async {
                         await todo.delete();
                         context.read<TodoListProvider>().refreshList();
-                        SnackBar(
+                        ScaffoldMessenger.of(context).showSnackBar(SnackBar(
                           content: Center(
                             child: Text(
                               "Todo Removed",
@@ -95,7 +95,7 @@ class _HomePageState extends State<HomePage> {
                           ),
                           behavior: SnackBarBehavior.floating,
                           shape: StadiumBorder(),
-                        );
+                        ));
                       },
                       icon: Icon(Icons.delete),
                       iconSize: 20.0,
@@ -114,7 +114,9 @@ class _HomePageState extends State<HomePage> {
   Widget _buildTodoViewer(String filter) {
     return ListView(
       children: todos
-          .where((item) => item.title.contains(filter))
+          .where((item) => item.title.toLowerCase().contains(
+                filter.toLowerCase(),
+              ))
           .map((e) => _buildTodo(e))
           .toList(),
     );
@@ -191,10 +193,9 @@ class _HomePageState extends State<HomePage> {
             crossAxisAlignment: CrossAxisAlignment.center,
             children: [
               SearchBar(
-                controller: searchController,
                 elevation: MaterialStatePropertyAll<double>(0),
                 onChanged: (value) => setState(() {
-                  searchController.text = value;
+                  _search = value;
                 }),
                 hintText: "Search",
                 leading: IconButton(
@@ -210,7 +211,7 @@ class _HomePageState extends State<HomePage> {
               ),
               Expanded(
                 child: Container(
-                  child: _buildTodoViewer(searchController.text),
+                  child: _buildTodoViewer(_search),
                 ),
               ),
             ],
