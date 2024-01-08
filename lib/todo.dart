@@ -29,7 +29,7 @@ class Todo {
     return Todo(
       id: _dbmap['id'],
       title: _dbmap['title'].toString(),
-      body: _dbmap['body'],
+      body: _dbmap['body'].toString(),
       isDone: _dbmap['isDone'] == 1,
     );
   }
